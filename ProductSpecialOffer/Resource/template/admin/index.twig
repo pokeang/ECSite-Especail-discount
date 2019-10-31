@@ -1,0 +1,188 @@
+{% extends '@admin/default_frame.twig' %}
+
+{% set menus = ['product', 'plugin'] %}
+
+{% block title %}ProductSpecialOffer{% endblock %}
+{% block sub_title %}製品特別オファ一覧{% endblock %}
+
+{% form_theme searchForm '@admin/Form/bootstrap_4_horizontal_layout.html.twig' %}
+
+{% block stylesheet %}{% endblock stylesheet %}
+
+{% block javascript %}
+<script>
+  $("#btn_clear_search").click(function(){
+    $("#product_special_offer_search_product_code").val("");
+    $("#product_special_offer_search_product_name").val("");
+  });
+
+
+
+
+  var push_complete_special_offer = function(productId) {
+    var product = '';
+    var object_data = {
+        is_update_customer_piont: true,
+        product_id: productId
+    };
+
+    $.ajax({
+        type: "POST",
+        url: "{{ url('product_special_offer_admin_product_special_offer') }}",
+        data: object_data,
+        success: function() {
+          $("#update_customer_complete_point_" + productId).remove();
+          $("#update_customer_id_"+productId).text("completed");
+        },
+        error: function(e) {
+            console.log(e);
+        }
+    });
+  }
+</script>
+{% endblock javascript %}
+
+{% block main %}
+<!--検索条件設定テーブルここから-->
+<div class="c-outsideBlock">
+    <form name="search_form" id="search_form" method="post" action="">
+        {{ form_widget(searchForm._token) }}
+        <!-- <div class="c-outsideBlock__contents">
+            <div class="row justify-content-start">
+                <div class="col-6">
+
+                    <div class="d-inline-block mb-3" data-toggle="collapse" href="#searchDetail"
+                         aria-expanded="false" aria-controls="searchDetail"><a><i
+                                    class="fa fa-plus-square-o font-weight-bold mr-1"></i><span
+                                    class="font-weight-bold">{{ 'product_special_offer.admin.product_special_offer.search_detail'|trans }}</span></a>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+        <div class="c-outsideBlock__contents" id="searchDetail">
+            <div class="row mb-2">
+                <div class="col-6">
+                    {{ form_label(searchForm.product_name) }}
+                    <div class="form-group">
+                        {{ form_widget(searchForm.product_name) }}
+                        {{ form_errors(searchForm.product_name) }}
+                    </div>
+                </div>
+                <div class="col-6">
+                    {{ form_label(searchForm.target_sell) }}
+                    <div class="form-group">
+                        {{ form_widget(searchForm.target_sell) }}
+                        {{ form_errors(searchForm.target_sell) }}
+                    </div>
+                </div>
+
+            </div>
+            <div class="d-block float-right">
+                <button class="btn btn-ec-regular search-clear text-center" id="btn_clear_search"
+                        type="button">{{ 'product_special_offer.admin.product_special_offer.search_clear'|trans }}</button>
+            </div>
+        </div><!-- /.col -->
+        <div class="c-outsideBlock__contents mb-5">
+            <button class="btn btn-ec-conversion px-5"
+                    type="submit">{{ 'product_special_offer.admin.product_special_offer.search_button'|trans }}</button>
+            {% if pagination %}
+                <span id="search-result"
+                      class="font-weight-bold ml-2">{{ 'product_special_offer.admin.product_special_offer.search_result_count'|trans({"%count%":pagination.totalItemCount}) }}</span>
+            {% endif %}
+        </div>
+        <div class="c-outsideBlock__contents mb-5">
+            {{ include('@admin/search_items.twig', { 'form': searchForm }, ignore_missing = true) }}
+        </div>
+    </form>
+</div>
+<!--検索条件設定テーブルここまで-->
+<div class="c-contentsArea__cols">
+    <div class="c-contentsArea__primaryCol">
+        <div class="c-primaryCol">
+
+        {% if pagination and pagination.totalItemCount %}
+
+            <div class="row justify-content-between mb-2">
+              <div class="col-6">
+                  &nbsp;
+              </div>
+              <div class="col-5 text-right">
+                  <div class="d-inline-block mr-2">
+                      <div>
+                          <select class="custom-select" onchange="location = this.value;">
+                              {% for pageMax in pageMaxis %}
+                                  <option {% if pageMax.name == page_count %}selected=""{% endif %}
+                                          value="{{ path('product_special_offer_admin_product_special_offer_page', {'page_no': 1, 'page_count': pageMax.name}) }}">{{ 'product_special_offer.admin.product_special_offer.diaply_count'|trans({'%count%' : pageMax.name}) }}</option>
+                              {% endfor %}
+                          </select>
+                      </div>
+                  </div>
+              </div>
+            </div>
+            <div class="card rounded border-0 mb-4">
+                <div class="card-body p-0">
+                    <table class="table table-sm">
+                        <thead>
+                        <tr>
+                            <th class="text-center">ID</th>
+                            <th>{{ 'product_special_offer.admin.product_special_offer.th_product_name'|trans }}</th>
+                            <th>{{ 'product_special_offer.admin.product_special_offer.th_total_bought'|trans }}</th>
+                            <th>{{ 'product_special_offer.admin.product_special_offer.th_target_sell'|trans }}</th>
+                            <th>{{ 'product_special_offer.admin.product_special_offer.th_during_days'|trans }}</th>
+                            <th>{{ 'product_special_offer.admin.product_special_offer.th_price'|trans }}</th>
+                            <th>{{ 'product_special_offer.admin.product_special_offer.th_complete'|trans }}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                          {% if pagination[0].id != '' %}
+                            {% for ProductSpecialOffer in pagination %}
+                                <tr>
+                                    <td class="text-center" id="product_id">{{ ProductSpecialOffer.id }}</td>
+                                    <td>{{ ProductSpecialOffer.productName }}</td>
+                                    <td>{{ ProductSpecialOffer.numBuyers }}</td>
+                                    <td>{{ ProductSpecialOffer.targetSell }}</td>
+                                    <td>{{ ProductSpecialOffer.specailOfferDay|date_min }}</td>
+                                    <td>{{ ProductSpecialOffer.pointOffer }}</td>
+                                    <td id='update_customer_id_{{ProductSpecialOffer.id}}'>
+                                      {% if ProductSpecialOffer.numBuyers >= ProductSpecialOffer.targetSell %}
+                                        {% if ProductSpecialOffer.flagSpecialOffer == true %}
+                                          {{ 'product_special_offer.admin.product_special_offer.completed_button'|trans }}
+                                        {% else %}
+                                          <button class="btn btn-ec-conversion px-5" onclick="push_complete_special_offer({{ProductSpecialOffer.id}})" id="update_customer_complete_point_{{ProductSpecialOffer.id}}" type="submit">{{ 'product_special_offer.admin.product_special_offer.complete_button'|trans }}</button>
+                                        {% endif %}
+                                      {% else %}
+                                        <button class="btn btn-ec-conversion px-5" disabled>{{ 'product_special_offer.admin.product_special_offer.waiting_complete_button'|trans }}</button>
+                                          <!-- <button class="btn btn-ec-conversion px-5" onclick="push_complete_special_offer({{ProductSpecialOffer.id}})" >{{ 'product_special_offer.admin.product_special_offer.waiting_complete_button'|trans }} -->
+                                      {% endif %}
+                                      </td>
+                                </tr>
+                            {% endfor %}
+                        {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row justify-content-md-center mb-4">
+                {% if pagination|length > 0 %}
+                    {% include "@admin/pager.twig" with { 'pages' : pagination.paginationData, 'routes' : 'product_special_offer_admin_product_special_offer_page' } %}
+                {% endif %}
+            </div>
+          {% elseif has_errors %}
+              <div class="card rounded border-0">
+                  <div class="card-body p-4">
+                      <div class="text-center text-muted mb-4 h5">{{ 'product_special_offer.admin.product_special_offer.search_invalid_condition'|trans }}</div>
+                      <div class="text-center text-muted">{{ 'product_special_offer.admin.product_special_offer.search_change_condition_and_retry'|trans }}</div>
+                  </div>
+              </div>
+          {% else %}
+              <div class="card rounded border-0">
+                  <div class="card-body p-4">
+                      <div class="text-center text-muted mb-4 h5">{{ 'product_special_offer.admin.product_special_offer.search_no_result'|trans }}</div>
+                      <div class="text-center text-muted">{{ 'product_special_offer.admin.product_special_offer.search_change_condition_and_retry'|trans }}</div>
+                  </div>
+              </div>
+          {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

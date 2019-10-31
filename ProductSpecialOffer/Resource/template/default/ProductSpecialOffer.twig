@@ -1,0 +1,84 @@
+{#
+This file is part of EC-CUBE
+
+Copyright(c) LOCKON CO.,LTD. All Rights Reserved.
+
+http://www.lockon.co.jp/
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+#}
+
+<!-- Go to www.addthis.com/dashboard to customize your tools --> <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-51e7511a565f5d9e"></script>
+<script>
+    $(function () {
+      var img = window.location.origin + $('.slick-current img').attr("src");
+      $('head').append('<meta property="og:image" content="'+img+'" />')
+      $('#product_special_offer_area').insertAfter($('div.ec-productRole__price'));
+
+      // Set the date we're counting down to
+      var date_remain = $("#hide_remain_days").val();
+      var countDownDate = new Date(date_remain).getTime();//new Date("Jan 5, 2021 15:37:25").getTime();
+
+      // Update the count down every 1 second
+      var x = setInterval(function() {
+
+        // Get todays date and time
+        var now = new Date().getTime();
+
+        // Find the distance between now and the count down date
+        var distance = countDownDate - now;
+
+        // Time calculations for days, hours, minutes and seconds
+        var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        // Output the result in an element with id="demo"
+        document.getElementById("remain_days").innerHTML = days + "d " + hours + "h "
+        + minutes + "m " + seconds + "s left";
+
+        // If the count down is over, write some text
+        if (distance < 0) {
+          clearInterval(x);
+          document.getElementById("remain_days").innerHTML = "EXPIRED";
+        }
+      }, 1000);
+    });
+</script>
+
+<style media="screen">
+
+  #product_special_offer_area {
+    color: blue;
+  }
+  .ec-productRole__special_offer {
+    width:100%; float:left; padding: 14px 0; border-bottom: 1px dotted #ccc; margin-bottom: 10px;
+  }
+  .av-share-box {
+    margin-top: 10px;
+  }
+  .bold-text {
+    font-weight: bold;
+  }
+  .no-border-bottom {
+    border-bottom: 0px !important;
+  }
+</style>
+
+{% if Product.target_sell is not empty %}
+    <div id="product_special_offer_area" class="ec-productRole__special_offer">
+      <p id="demo"></p>
+        {% if Product.target_sell is not empty %}
+            <input type="hidden" id="hide_remain_days" value="{{ProductSpecialOfferRemainDays}}" />
+            <p class="ec-maker">{{'product_special_offer.front.title.point_get'|trans}}: <span class="ec-productRole__price no-border-bottom">{{ Product.point_offer }}</span></p>
+            <p class="ec-maker"><span class="bold-text">{{ Product.target_sell - ProductSpecialOfferRemainBuyer }}</span> {{'product_special_offer.front.title.custemer_bought'|trans}} <br/> {{'product_special_offer.front.title.share_friends'|trans}} </p>
+            <p>&nbsp</p>
+            <p class="" id="days_remain">{{'product_special_offer.front.title.remain_days'|trans}}: <span class="bold-text" id="remain_days"></span></p>
+            <div class="av-share-box">
+            <!-- Go to www.addthis.com/dashboard to customize your tools --> <div class="addthis_inline_share_toolbox_3s6s"></div>
+            </div>
+        {% endif %}
+    </div>
+{% endif %}

@@ -1,0 +1,38 @@
+# product special offer backend menu
+product_special_offer.admin.product_special_offer.title: 製品特別オファー管理
+
+
+# レビュー一覧画面
+product_special_offer.admin.product_special_offer.search_button: 検索
+product_special_offer.admin.product_special_offer.search_clear: 検索条件をクリア
+product_special_offer.admin.product_special_offer.search_detail: 詳細検索
+product_special_offer.admin.product_special_offer.search_result_count: 検索結果：%count%件が該当しました。
+product_special_offer.admin.product_special_offer.search_product_name: 商品名
+product_special_offer.admin.product_special_offer.search_product_target_sell: 対象者
+product_special_offer.admin.product_special_offer.th_product_name: 商品名
+product_special_offer.admin.product_special_offer.th_total_bought: ユーザーが購入しました
+product_special_offer.admin.product_special_offer.th_target_sell: ターゲット売り
+product_special_offer.admin.product_special_offer.th_during_days: 日付売り中
+product_special_offer.admin.product_special_offer.th_price: 価格/ポイント
+product_special_offer.admin.product_special_offer.th_complete: コンプリート
+product_special_offer.admin.product_special_offer.waiting_complete_button: 待っている
+product_special_offer.admin.product_special_offer.complete_button: プッシュ完了
+product_special_offer.admin.product_special_offer.completed_button: 完成した
+product_special_offer.admin.product_special_offer.diaply_count: %count%件
+product_special_offer.admin.product_special_offer.search_no_result: 検索条件に合致するデータが見つかりませんでした
+product_special_offer.admin.product_special_offer.search_invalid_condition: 検索条件に誤りがあります
+product_special_offer.admin.product_special_offer.search_change_condition_and_retry: 検索条件を変えて、再度検索をお試しください。
+
+product_special_offer.admin.target_sell: 対象者
+product_special_offer.admin.placeholder.target_sell: 対象販売者を入力してください
+product_special_offer.admin.point: 項目のポイント
+product_special_offer.admin.placeholder.point: 項目のポイントを入力してください
+product_special_offer.admin.target_days: 日中
+product_special_offer.admin.placeholder.target_days: 何日入力してください
+product_special_offer.admin.flag_special_offer: ステータス完了
+
+# product special offer front
+product_special_offer.front.title.custemer_bought: Buyers left.
+product_special_offer.front.title.share_friends: Share to friends
+product_special_offer.front.title.point_get: You can get points
+product_special_offer.front.title.remain_days: Duration is

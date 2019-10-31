@@ -1,0 +1,9 @@
+{
+  "name": "ec-cube/ProductSpecialOffer",
+  "version": "1.0.0",
+  "description": "ProductSpecialOffer",
+  "type": "eccube-plugin",
+  "extra": {
+    "code": "ProductSpecialOffer"
+  }
+}
